@@ -10,16 +10,17 @@ NONE = 'n'
 	
 ENTITY_METHOD = 'm'
 ENTITY_CLASS = 'c'
-ENTITY_SOURCE_PATH = 'p'
+ENTITY_SOURCE_FILE = 'p'
 ENTITY_CHOICES = (
 	(ENTITY_METHOD, 'METHOD'),
 	(ENTITY_CLASS, 'CLASS'),
-	(ENTITY_SOURCE_PATH, 'SOURCE_PATH'),
+	(ENTITY_SOURCE_FILE, 'SOURCE_FILE'),
 	(NONE, 'NONE'),
 )
 class Entity(models.Model):
 	code = models.CharField(max_length=255)
 	isPublic = models.BooleanField(default=True)
+	className = models.CharField(max_length=100)
 	typeOfEntity = models.CharField(
 		max_length=1,
 		default=ENTITY_METHOD,

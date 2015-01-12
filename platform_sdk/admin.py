@@ -9,7 +9,7 @@ class AdminCommit(ModelAdmin):
 admin.site.register(Commit, AdminCommit)
 
 class AdminEntity(ModelAdmin):
-	list_display = ('code', 'isPublic', 'typeOfEntity')
+	list_display = ('code', 'isPublic', 'className', 'typeOfEntity')
 
 admin.site.register(Entity, AdminEntity)
 
