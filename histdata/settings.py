@@ -39,7 +39,7 @@ INSTALLED_APPS = (
 	'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	'platform_sdk',
+	'core',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -63,7 +63,7 @@ WSGI_APPLICATION = 'histdata.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'platform-sdk.db',
+        'NAME': 'banco.db',
     }
 }
 

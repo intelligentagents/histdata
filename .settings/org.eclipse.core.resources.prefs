@@ -1,0 +1,12 @@
+eclipse.preferences.version=1
+encoding//core/migrations/0001_initial.py=utf-8
+encoding//core/migrations/0002_auto_20141222_2154.py=utf-8
+encoding//core/migrations/0003_auto_20141225_1603.py=utf-8
+encoding//core/migrations/0004_auto_20141225_1738.py=utf-8
+encoding//core/migrations/0005_auto_20141225_1746.py=utf-8
+encoding//core/migrations/0006_auto_20141225_1836.py=utf-8
+encoding//core/migrations/0007_auto_20141225_2236.py=utf-8
+encoding//core/migrations/0008_auto_20141226_1051.py=utf-8
+encoding//core/migrations/0009_auto_20150105_1925.py=utf-8
+encoding//core/migrations/0010_entity_classname.py=utf-8
+encoding//core/migrations/0011_auto_20150112_1347.py=utf-8
