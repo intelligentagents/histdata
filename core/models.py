@@ -7,7 +7,7 @@ class Commit(models.Model):
 	commited = models.DateTimeField()
 
 NONE = 'n'
-	
+
 ENTITY_METHOD = 'm'
 ENTITY_CLASS = 'c'
 ENTITY_SOURCE_FILE = 'p'
@@ -29,7 +29,44 @@ class Entity(models.Model):
 
 	class Meta:
 		unique_together = (('code', 'isPublic'),)
-		
+
+	def class_count_from_changes(self, changes):
+		classes = []
+		for change in changes:
+			if change.entity_obj.className and (change.entity_obj.className not in classes):
+				classes.append(change.entity_obj.className)
+		return len(classes)
+
+	def calculate_beta(self): #Feature Envy for Methods
+		if not self.typeOfEntity == ENTITY_METHOD:
+			return 0
+
+		commits = Commit.objects.filter(change__entity_obj=self)
+		beta = 0
+		external_rate = 0
+		internal_rate = 0
+		for commit in commits:
+			changes = Change.objects.filter(commit_obj=commit)
+			if changes.count() <= 1:
+				continue
+
+			if self.class_count_from_changes(changes) < 2: #verifica quantas classes estao envolvidas
+				continue
+
+			external_changes = changes.filter(entity_obj__className=self.className).count()
+			internal_changes = changes.exclude(entity_obj__className=self.className).count()
+
+
+
+			if external_changes != internal_changes:
+				if external_changes > internal_changes:
+					external_rate += 1
+				else:
+					internal_rate += 1
+
+
+		return 1.0*external_rate / (internal_rate + external_rate)
+
 ADDED = 'a'
 BODY_MODIFIED = 'b'
 CHANGED_RETURN_TYPE = 'c'
@@ -64,12 +101,12 @@ class Change(models.Model):
 		choices=CHANGE_CHOICES,
 		)
 	isBugFix = models.BooleanField(default=True)
-	
+
 	class Meta:
 		unique_together = (('commit_obj', 'entity_obj', 'desc'),)
-		
+
 	def getCommit(self):
 		return self.commit_obj.snapshot
-		
+
 	def getEntity(self):
 		return self.entity_obj.code
