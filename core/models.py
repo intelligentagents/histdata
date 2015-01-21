@@ -67,6 +67,33 @@ class Entity(models.Model):
 
 		return 1.0*external_rate / (internal_rate + external_rate)
 
+	def commit_class_dict(self):
+		commit_classes = {}
+
+		commits = Commit.objects.all()
+
+		for commit in commits:			
+			if commit not in commit_classes:
+				commit_classes[commit] = []
+				changes = Change.objects.filter(commit_obj=commit)
+				for change in changes:
+					if change.entity_obj.className not in commit_classes[commit]:
+						commit_classes[commit].append(change.entity_obj.className)
+
+			if len(commit_classes[commit]) < 2: del commit_classes[commit]
+
+		return commit_classes
+
+	def calculate_alfa(self): #Blob
+		commit_qta = 0
+		commits = self.commit_class_dict()
+		for commit in commits:
+			if self.className in commits[commit]:
+				commit_qta += 1
+
+		return (commit_qta*100.0)/len(commits) #retorna valor percentual do alfa, calculo ainda nao esta correto
+
+
 ADDED = 'a'
 BODY_MODIFIED = 'b'
 CHANGED_RETURN_TYPE = 'c'
@@ -105,8 +132,8 @@ class Change(models.Model):
 	class Meta:
 		unique_together = (('commit_obj', 'entity_obj', 'desc'),)
 
-	def getCommit(self):
+	def get_commit(self):
 		return self.commit_obj.snapshot
 
-	def getEntity(self):
+	def get_entity(self):
 		return self.entity_obj.code

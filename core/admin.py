@@ -14,6 +14,6 @@ class AdminEntity(ModelAdmin):
 admin.site.register(Entity, AdminEntity)
 
 class AdminChange(ModelAdmin):
-	list_display = ('getCommit', 'getEntity', 'desc', 'isBugFix')
+	list_display = ('get_commit', 'get_entity', 'desc', 'isBugFix')
 
 admin.site.register(Change, AdminChange)
