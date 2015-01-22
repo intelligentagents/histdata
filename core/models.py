@@ -67,31 +67,37 @@ class Entity(models.Model):
 
 		return 1.0*external_rate / (internal_rate + external_rate)
 
-	def commit_class_dict(self):
-		commit_classes = {}
+	def get_commits_involving_two_or_more_classes(self):
+		filtered_commits = []
 
 		commits = Commit.objects.all()
 
-		for commit in commits:			
-			if commit not in commit_classes:
-				commit_classes[commit] = []
-				changes = Change.objects.filter(commit_obj=commit)
-				for change in changes:
-					if change.entity_obj.className not in commit_classes[commit]:
-						commit_classes[commit].append(change.entity_obj.className)
+		for commit in commits:
+			changes = Change.objects.filter(commit_obj=commit)
+			if self.class_count_from_changes(changes) >= 2:
+				filtered_commits.append(commit)
 
-			if len(commit_classes[commit]) < 2: del commit_classes[commit]
-
-		return commit_classes
+		return filtered_commits
 
 	def calculate_alfa(self): #Blob
-		commit_qta = 0
-		commits = self.commit_class_dict()
-		for commit in commits:
-			if self.className in commits[commit]:
-				commit_qta += 1
+		commits = self.get_commits_involving_two_or_more_classes()
 
-		return (commit_qta*100.0)/len(commits) #retorna valor percentual do alfa, calculo ainda nao esta correto
+		commits_with_class = 0
+		commits_without_class = 0
+
+		if not commits:
+			return 0
+
+		for commit in commits:
+			changes = Change.objects.filter(commit_obj=commit)
+			changes_with_this_class = changes.filter(entity_obj__className=self.className).count()
+			if not changes_with_this_class:
+				commits_with_class += 1
+			else:
+				commits_without_class += 1
+
+		return (1.0*commits_with_class) / len(commits)
+
 
 
 ADDED = 'a'
