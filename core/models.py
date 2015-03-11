@@ -2,9 +2,16 @@ from django.db import models
 from utils import getType, formatDate, getState
 from datetime import datetime
 
+class Developer(models.Model):
+	name = models.CharField(max_length=200)
+
+	def __unicode__(self):
+		return self.name
+
 class Commit(models.Model):
 	snapshot = models.CharField(max_length=100, primary_key=True, unique=True)
 	commited = models.DateTimeField()
+	developer = models.ForeignKey(Developer, null=True)
 
 NONE = 'n'
 
