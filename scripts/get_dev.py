@@ -4,7 +4,7 @@ from core.models import Commit, Developer
 
 commits = Commit.objects.all()
 
-command = 'git --git-dir=/home/hozano/git/android-sdk/.git --no-pager show -s --format="%aN <%aE>" '
+command = 'git --git-dir=D:/Wally/UFAL/Refactoring/git/sdk/.git --no-pager show -s --format="%aN <%aE>" '
 
 for commit in commits:
     c = command + commit.snapshot
@@ -12,4 +12,3 @@ for commit in commits:
     author,created = Developer.objects.get_or_create(name=author_string)
     commit.developer = author
     commit.save()
-    print author

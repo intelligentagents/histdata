@@ -12,6 +12,9 @@ class Commit(models.Model):
 	snapshot = models.CharField(max_length=100, primary_key=True, unique=True)
 	commited = models.DateTimeField()
 	developer = models.ForeignKey(Developer, null=True)
+	
+	def __unicode__(self):
+		return self.snapshot
 
 NONE = 'n'
 
@@ -36,6 +39,9 @@ class Entity(models.Model):
 
 	class Meta:
 		unique_together = (('code', 'isPublic'),)
+		
+	def __unicode__(self):
+		return self.code
 
 	def class_count_from_changes(self, changes):
 		classes = []
@@ -144,9 +150,3 @@ class Change(models.Model):
 
 	class Meta:
 		unique_together = (('commit_obj', 'entity_obj', 'desc'),)
-
-	def get_commit(self):
-		return self.commit_obj.snapshot
-
-	def get_entity(self):
-		return self.entity_obj.code
