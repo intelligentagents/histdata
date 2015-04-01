@@ -15,6 +15,20 @@ class Commit(models.Model):
 	
 	def __unicode__(self):
 		return self.snapshot
+		
+	def get_entities_by_commit(self, commit):
+		changes = Change.objects.filter(commit_obj=commit)
+		entities_list = []
+		name = ''
+		for change in changes:
+			if change.entity_obj.className == '':				
+				name = change.entity_obj.code.replace('.java', '').replace('.', '/')
+			else:
+				name = change.entity_obj.className.replace('.', '/')
+			if name not in entities_list:
+					entities_list.append(name)
+				
+		return entities_list
 
 NONE = 'n'
 
@@ -150,3 +164,14 @@ class Change(models.Model):
 
 	class Meta:
 		unique_together = (('commit_obj', 'entity_obj', 'desc'),)
+		
+class Metrics(models.Model):
+	commit_obj = models.ForeignKey(Commit)
+	entity_name = models.CharField(max_length=256)
+	atfd = models.IntegerField()
+	tcc = models.FloatField()
+	wmc = models.IntegerField()
+	
+	class Meta:
+		unique_together = (('commit_obj', 'entity_name'),)
+	
